@@ -150,7 +150,7 @@ echo "--------------------------------------------------------------------------
 read -p "Press [Enter] key to continue..." readEnterKey
 ```
 
-* Subir cambios a repositorio:
+* Subir cambios a Repositorio:
 
 Cuando trabajamos de manera local en nuestros respoitorios implementamos la siguiente serie de comandos para subir los respectivos cambios a nuestra cuenta de GitHub
 
@@ -224,7 +224,19 @@ clon2=${3}
       # Pedira acceso de credenciales en github por front desde el visual code
 #Fin Script
 ```
-Para comodidad de todos los usuarios se autotizo este proceso para realizar los cambios y solo es necesario ejecutar alguno de los siguientes comandos:
+Para comodidad de todos los usuarios se automatizo este proceso para realizar los cambios y solo es necesario ejecutar alguno de los siguientes comandos:
 
       * Linux: ./pushGit.sh \"comentario\" \"rams\" \"clone\"
       * Windows: sh pushGit.sh \"comentario\" \"rams\" \"clone\"
+
+* Clonar Repositorios:
+
+Dentro de Github nos dirijimos al repositorio que deseamos clonar, ya dentro de este damos click en el boton que dice "Code", en la ventana que se despliega seleccionamos "HTTPS", y ese link es el que copiamos para la respectiva clonacion.
+
+![clon repo](img/14.jpg)
+
+Ya dentro de nuestro entorno de trabajo nos dirijimos a la carpeta anteriormente creada donde se van a almacenar los repositorios, digitamos el comando "git clone" acompañado del link anteriromente copiado, y al dar Enter comenzara el clonado de ese repositorio en la carpeta seleccionada.
+
+![clon maquina](img/15.jpg)
+
+
