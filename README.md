@@ -67,3 +67,164 @@ En nuestra imagen ingresamos el comando "ssh-keygen", dependiendo la ruta que es
 ![configuracion](img/12.jpg)
 
 ## Segunda Parte:
+
+* Agregar modulo de instalacion Docker en menu de administracion:
+
+En el archivo Menu.sh que se encuentra en la rama "gh-pages" se agrega la opcion "Instalar Docker".
+
+![opcion Docker](img/13.jpg)
+
+Al seleccionar esa opcion se ejecutaran la siguiente serie de comandos dentro de nuestra maquina
+
+```shell
+cd ~/
+
+echo "-----------------------------------------------------------------------------"
+echo "Instalación Prerequisitios"
+echo "-----------------------------------------------------------------------------"
+sudo apt-get update -y
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" -y
+sudo apt update -y
+apt-cache policy docker-ce 
+sudo apt install docker-ce -y
+
+echo "-----------------------------------------------------------------------------"
+echo "Verificar Version"
+echo "-----------------------------------------------------------------------------"
+docker --version
+
+echo "-----------------------------------------------------------------------------"
+echo "Iniciar docker con el sistema"
+echo "-----------------------------------------------------------------------------"
+sudo systemctl enable docker
+sudo systemctl start docker
+
+echo "-----------------------------------------------------------------------------"
+echo "Crear usuario de Docker"
+echo "-----------------------------------------------------------------------------"
+sudo adduser docker
+
+
+echo "-----------------------------------------------------------------------------"
+echo "Agregar permisos usuario ubunutu al grupo Docker"
+echo "-----------------------------------------------------------------------------"
+user=$(whoami)
+sudo usermod -G docker $user
+grep $user /etc/group
+
+echo "-----------------------------------------------------------------------------"
+echo "folder docker"
+echo "-----------------------------------------------------------------------------"
+folder=/Images
+sudo mkdir -p $folder/$user
+sudo mkdir -p $folder/$user/Data
+sudo chown -R $user:$user $folder/$user
+sudo chown -R $user:$user $folder/$user/Data
+ls -ltr $folder/
+
+read -p "Press [Enter] key to continue..." readEnterKey
+
+echo "-----------------------------------------------------------------------------"
+echo "Inicia instalacion Docker Compose                                            "
+echo "-----------------------------------------------------------------------------"
+
+sudo mkdir -p /usr/local/bin
+sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+echo "-----------------------------------------------------------------------------"
+echo "Verificar docker-compose"
+echo "-----------------------------------------------------------------------------"
+sudo docker-compose --version
+
+read -p "Press [Enter] key to continue..." readEnterKey
+
+
+echo "-----------------------------------------------------------------------------"
+echo "Fin instalacion Docker                                                       "
+echo "-----------------------------------------------------------------------------"
+
+read -p "Press [Enter] key to continue..." readEnterKey
+```
+
+* Subir cambios a repositorio:
+
+Cuando trabajamos de manera local en nuestros respoitorios implementamos la siguiente serie de comandos para subir los respectivos cambios a nuestra cuenta de GitHub
+
+```shell
+#/bin/bash
+clear
+
+# set variables
+#username=$1
+#token=$2
+#repo=$3
+comment=${1}
+rama=${2}
+clon2=${3}
+
+# Validar estructura de Repositorio
+   if [[ -z $comment ]]; then
+      echo  '---------------------------------------------------------------------'
+      echo "Ejemplo de Ejecucion"
+      echo " sh pushGit.sh \"comentario\" \"rams\" \"clone\" "
+      echo  '---------------------------------------------------------------------'
+      echo -e "\--- Fin del Script -------------------------"
+      read -p "Press [Enter] key to continue..." readEnterKey
+      exit 1
+   fi
+
+# Configuracion gobal del repositorio
+   git config --global user.email "wfrancocamp@gmail.com"
+   git config --global user.name "WillianFranco17"
+   git config --global core.autocrlf false
+
+# Preguntar si desea Clonar
+   read -p ">> Digite Y/N si desea clonar : " clone
+   if [[ $clone =~ ^[Yy]$ ]]
+   then
+      git clone $clone
+   fi
+   
+# Pasos de Clonacion
+   # Imprimir Variables
+      echo -e "--------------------------------------------"  
+      echo "comentario :[$comment] | rama :[$rama]"
+      echo -e "--------------------------------------------"  
+   
+   # Status
+      echo "--------------------------------------------"   
+      echo "inicia carga en git"
+      echo "--------------------------------------------"   
+         git status
+         echo "- Reporte Status----------------------------"
+      read -p "Press [Enter] key to continue..." readEnterKey
+
+   # Add todo slo scambios de la carpeta actual
+      echo "--------------------------------------------"   
+         git add .
+         echo "- Agregar cambios locales ------------------"
+      read -p "Press [Enter] key to continue..." readEnterKey
+   
+   # Agregar Comentario
+      echo "--------------------------------------------"   
+         git commit -m "$comment"
+         echo "- Agregar Comenatario ---------------------"
+      read -p "Press [Enter] key to continue..." readEnterKey
+
+   # Subir cambios a la rama remota
+      echo "--------------------------------------------"   
+         git push origin $rama
+         echo "- Subir a $rama --------------------------"
+      echo "--- Fin del Script -------------------------"
+      read -p "Press [Enter] key to continue..." readEnterKey
+      # Pedira acceso de credenciales en github por front desde el visual code
+#Fin Script
+```
+Para comodidad de todos los usuarios se autotizo este proceso para realizar los cambios y solo es necesario ejecutar alguno de los siguientes comandos:
+
+      * Linux: ./pushGit.sh \"comentario\" \"rams\" \"clone\"
+      * Windows: sh pushGit.sh \"comentario\" \"rams\" \"clone\"
